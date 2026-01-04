@@ -123,7 +123,6 @@ const linkTo = computed(() => {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin: 0;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
