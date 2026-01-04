@@ -1,0 +1,27 @@
+name: Deploy to SFTP
+on:
+  push:
+    branches: [ main ]  # Trigger on pushes to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Optional: Build your project if needed
+      - name: Build Project
+        run: |
+          npm install
+          npm run build
+
+      - name: SFTP Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          server: ${{ secrets.SFTP_SERVER_URL }}
+          ssh_private_key: ${{ secrets.SFTP_SSH_KEY }}
+          local_path: './dist/*'
+          remote_path: 'public_html'
+          delete_remote_files: false
