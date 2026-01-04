@@ -14,13 +14,11 @@ jobs:
           npm install
           npm run build
 
-      - name: SFTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.SFTP_SERVER_URL }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          protocol: ftp
-          local-dir: ./dist/
-          server-dir: ./public_html/
-          #c
+      - name: Deploy via SFTP
+        run: |
+          sudo apt-get install -y lftp
+          lftp -u ${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }} sftp://${{ secrets.SFTP_SERVER_URL }} -e "
+            set sftp:auto-confirm yes;
+            mirror --reverse --delete --verbose ./dist/ ./public_html/;
+            quit
+          "
